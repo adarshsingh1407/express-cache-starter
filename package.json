@@ -4,7 +4,12 @@
   "description": "Express app for generic caching application",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "pm2 start ecosystem.dev.config.js && pm2 logs cacheapp",
+    "prod": "pm2 start ecosystem.config.js",
+    "stop": "pm2 stop cacheapp",
+    "logs": "pm2 logs cacheapp",
+    "reload": "pm2 reload cacheapp"
   },
   "repository": {
     "type": "git",

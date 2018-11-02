@@ -7,5 +7,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, function () {
-  console.log(`Server Starts on ${port}`);
+  console.log(`CacheApp Online on port:${port} with env:${process.env.NODE_ENV}`);
 });
