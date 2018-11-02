@@ -11,6 +11,7 @@ module.exports = {
     log_type: 'json',
     log_date_format: 'YYYY-MM-DD HH:mm:ss',
     max_memory_restart: '1G',
+    port: 8081,
     env: {
       NODE_ENV: 'development'
     }
