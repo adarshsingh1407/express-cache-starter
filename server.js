@@ -1,25 +1,21 @@
 const express = require('express');
 const compression = require('compression');
 const morgan = require('morgan');
+const SERVER_CONFIG = require('./config/serverConfig');
 
-const port = process.env.PORT || 8081;
-
-//Morgan Logging Format
-const morganFormat = '(STATUS~:status) ":method :url HTTP/:http-version" (REM_ADDR~:remote-addr) (RES_TIME~:response-time[3]) (REM_USER~:remote-user) (RES_CON_LENGTH~:res[content-length]) (REFERRER~:referrer) (USER_AGENT~:user-agent)';
-
+const port = process.env.PORT || SERVER_CONFIG.DEFAULT_PORT;
+const nodeEnv = process.env.NODE_ENV;
 
 const app = express();
 
 //Logging
-app.use(morgan(morganFormat));
+app.use(morgan(SERVER_CONFIG.MORGAN_FORMAT));
 
 // Compression
-app.use(compression({level: 1}))
+app.use(compression(SERVER_CONFIG.COMPRESSION_OPTIONS))
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send('CacheApp Online!');
 });
 
-app.listen(port, function () {
-  console.log(`CacheApp Online on port:${port} with env:${process.env.NODE_ENV}`);
-});
+app.listen(port, () => console.log(`CacheApp Online on port:${port} with env:${nodeEnv}`));

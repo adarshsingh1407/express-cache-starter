@@ -9,7 +9,7 @@ module.exports = {
     autorestart: true,
     watch: false,
     log_type: 'json',
-    log_date_format: 'YYYY-MM-DD HH:mm:ss',
+    log_date_format: 'YYYY-MM-DD HH:mm:ss ZZ',
     max_memory_restart: '1G',
     port: 8081,
     env: {
