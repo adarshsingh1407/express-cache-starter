@@ -2,12 +2,16 @@ const express = require('express');
 const compression = require('compression');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const helmet = require('helmet')
 const SERVER_CONFIG = require('./config/serverConfig');
 
 const port = process.env.PORT || SERVER_CONFIG.DEFAULT_PORT;
 const nodeEnv = process.env.NODE_ENV;
 
 const app = express();
+
+// Security Headers
+app.use(helmet())
 
 //Logging
 app.use(morgan(SERVER_CONFIG.MORGAN_FORMAT));
