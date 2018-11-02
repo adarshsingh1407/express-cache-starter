@@ -1,0 +1,22 @@
+{
+  "name": "express-cache-starter",
+  "version": "1.0.0",
+  "description": "Express app for generic caching application",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adarshsingh1407/express-cache-starter.git"
+  },
+  "author": "Adarsh Singh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adarshsingh1407/express-cache-starter/issues"
+  },
+  "homepage": "https://github.com/adarshsingh1407/express-cache-starter#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
