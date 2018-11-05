@@ -1,4 +1,5 @@
 const GithubService = require('../services/githubService');
+const CacheService = require('../services/cacheService');
 
 const getGithub = (req, res) => {
   res.send({
@@ -6,13 +7,37 @@ const getGithub = (req, res) => {
   });
 };
 
-const getUserDetails = async (req, res) => {
+const getUserDetailsFromCache = async (req, res, next) => {
   const username = req.params.username || 'adarshsingh1407';
+  const cacheKey = `github:${username}`;
+  const cacheData = await CacheService.getCacheData(cacheKey);
+  if (cacheData) {
+    res.send({
+      message: 'FOUND',
+      fromCache: true,
+      data: JSON.parse(cacheData)
+    });
+  } else {
+    next();
+  }
+}
+
+const getUserDetails = async (req, res) => {
   try {
+    const username = req.params.username || 'adarshsingh1407';
+    const cacheKey = `github:${username}`;
     const githubUserResponse = await GithubService.getUserDetails(username);
     if (githubUserResponse.status === 200) {
+      // Save user details in redis
+      CacheService.setCacheData({
+        key: cacheKey,
+        value: JSON.stringify(githubUserResponse.data),
+        command: 'EX',
+        commandValue: 10
+      });
       res.send({
         message: 'FOUND',
+        fromCache: false,
         data: githubUserResponse.data
       });
     } else {
@@ -30,6 +55,7 @@ const getUserDetails = async (req, res) => {
 
 const GithubController = {
   getGithub,
+  getUserDetailsFromCache,
   getUserDetails
 }
 
