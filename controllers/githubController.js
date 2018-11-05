@@ -1,5 +1,6 @@
 const GithubService = require('../services/githubService');
 const CacheService = require('../services/cacheService');
+const SERVER_CONFIG = require('../config/serverConfig');
 
 const getGithub = (req, res) => {
   res.send({
@@ -8,32 +9,36 @@ const getGithub = (req, res) => {
 };
 
 const getUserDetailsFromCache = async (req, res, next) => {
-  const username = req.params.username || 'adarshsingh1407';
-  const cacheKey = `github:${username}`;
-  const cacheData = await CacheService.getCacheData(cacheKey);
-  if (cacheData) {
-    res.send({
-      message: 'FOUND',
-      fromCache: true,
-      data: JSON.parse(cacheData)
-    });
-  } else {
+  try {
+    const username = req.params.username || 'adarshsingh1407';
+    const cacheKey = `github:${username}`;
+    const cacheData = await CacheService.getCacheData(cacheKey);
+    if (cacheData) {
+      res.send({
+        message: 'FOUND',
+        fromCache: true,
+        data: JSON.parse(cacheData)
+      });
+    } else {
+      next();
+    }
+  } catch (e) {
+    console.error('Error fetching cache', e);
     next();
   }
 }
 
 const getUserDetails = async (req, res) => {
+  const username = req.params.username || 'adarshsingh1407';
+  const cacheKey = `github:${username}`;
   try {
-    const username = req.params.username || 'adarshsingh1407';
-    const cacheKey = `github:${username}`;
     const githubUserResponse = await GithubService.getUserDetails(username);
     if (githubUserResponse.status === 200) {
       // Save user details in redis
       CacheService.setCacheData({
         key: cacheKey,
         value: JSON.stringify(githubUserResponse.data),
-        command: 'EX',
-        commandValue: 10
+        ...SERVER_CONFIG.REDIS.CACHE_EXPIRY_OPTIONS
       });
       res.send({
         message: 'FOUND',
@@ -53,10 +58,25 @@ const getUserDetails = async (req, res) => {
   }
 }
 
+const delUserDetailsFromCache = async (req, res) => {
+  try {
+    const username = req.params.username || 'adarshsingh1407';
+    const cacheKey = `github:${username}`;
+    const cacheData = await CacheService.delCacheData(cacheKey);
+    res.send({
+      message: 'DELETED'
+    });
+  } catch (e) {
+    console.error('Error deleting cache', e);
+    next();
+  }
+}
+
 const GithubController = {
   getGithub,
   getUserDetailsFromCache,
-  getUserDetails
+  getUserDetails,
+  delUserDetailsFromCache
 }
 
 module.exports = GithubController;

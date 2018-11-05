@@ -11,6 +11,12 @@ const SERVER_CONFIG = {
     URL_ENCODED: {
       extended: false
     }
+  },
+  REDIS: {
+    CACHE_EXPIRY_OPTIONS: {
+      command: 'EX',
+      commandValue: 60//seconds
+    }
   }
 }
 

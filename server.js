@@ -3,8 +3,10 @@ const compression = require('compression');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const methodOverride = require('method-override');
 
 const SERVER_CONFIG = require('./config/serverConfig');
+const ServerHelper = require('./helpers/serverHelper');
 
 const github = require('./routes/github');
 
@@ -16,7 +18,7 @@ const app = express();
 // Security Headers
 app.use(helmet())
 
-//Logging
+// Logging
 app.use(morgan(SERVER_CONFIG.MORGAN_FORMAT));
 
 // Compression
@@ -27,6 +29,11 @@ app.use(bodyParser.urlencoded(SERVER_CONFIG.BODY_PARSER_OPTIONS.URL_ENCODED))
 
 // parse application/json
 app.use(bodyParser.json(SERVER_CONFIG.BODY_PARSER_OPTIONS.JSON))
+
+// Error Handlers
+app.use(ServerHelper.logErrors);
+app.use(ServerHelper.clientErrorHandler);
+app.use(ServerHelper.errorHandler);
 
 app.use('/github', github);
 
