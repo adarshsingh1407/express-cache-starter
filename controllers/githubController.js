@@ -58,6 +58,28 @@ const getUserDetails = async (req, res) => {
   }
 }
 
+const getUserDetailsDelayed = async (req, res) => {
+  const username = req.params.username || 'adarshsingh1407';
+  const cacheKey = `github:${username}`;
+  try {
+    const githubUserResponse = await GithubService.getUserDetails(username);
+    if (githubUserResponse.status === 200) {
+      setTimeout(function () {
+        res.send(githubUserResponse.data);
+      }, 3000);
+    } else {
+      res.send({
+        message: 'NOT_FOUND'
+      });
+    }
+  } catch (e) {
+    console.log('Unable to fetch user details from Github', username, e);
+    res.send({
+      message: 'ERROR'
+    });
+  }
+}
+
 const delUserDetailsFromCache = async (req, res) => {
   try {
     const username = req.params.username || 'adarshsingh1407';
@@ -76,7 +98,8 @@ const GithubController = {
   getGithub,
   getUserDetailsFromCache,
   getUserDetails,
-  delUserDetailsFromCache
+  delUserDetailsFromCache,
+  getUserDetailsDelayed
 }
 
 module.exports = GithubController;

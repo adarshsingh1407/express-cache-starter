@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const methodOverride = require('method-override');
+const cors = require('cors');
 
 const SERVER_CONFIG = require('./config/serverConfig');
 const ServerHelper = require('./helpers/serverHelper');
@@ -14,6 +15,8 @@ const port = process.env.PORT || SERVER_CONFIG.DEFAULT_PORT;
 const nodeEnv = process.env.NODE_ENV;
 
 const app = express();
+
+app.use(cors());
 
 // Security Headers
 app.use(helmet())
